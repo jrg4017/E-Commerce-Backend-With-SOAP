@@ -1,6 +1,6 @@
 
 import java.util.*;
-//import components.data.*;
+import components.data.*;
 /**
  *
  * @author Bryan French
@@ -40,7 +40,7 @@ public class TestDB {
         //extra steps here due to persistence api and join, need to create objects in list
         List<AppointmentLabTest> tests = new ArrayList<AppointmentLabTest>();
         AppointmentLabTest test = new AppointmentLabTest("800","86900","292.9");
-        test.setDiagnosis((Diagnosis)db.getData("Diagnosis", "code='292.9'").get(0));
+        test.setDiagnosis( (Diagnosis)db.getData("Diagnosis", "code='292.9'").get(0) );
         test.setLabTest((LabTest)db.getData("LabTest","id='86900'").get(0));
         tests.add(test);
         newAppt.setAppointmentLabTestCollection(tests);
