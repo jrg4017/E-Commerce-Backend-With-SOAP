@@ -16,7 +16,7 @@ public class TestDB {
 		  //need to do initial load before doing anything else.  If you don't you'll get an
 		  //error message stating such
 		  
-       // db.initialLoad("LAMS");
+        db.initialLoad("LAMS");
         System.out.println("All appointments");
         List<Object> objs = db.getData("Appointment", "");
         for (Object obj : objs){
