@@ -17,12 +17,23 @@ public class TestDB {
 		  //need to do initial load before doing anything else.  If you don't you'll get an
 		  //error message stating such
         db.initialLoad("LAMS");
-        System.out.println("All appointments");
-        List<Object> objs = db.getData("Appointment", "");
+        System.out.println("All patient ids");
+        List<Object> objs = db.getData("Patient", "id='210'");
         for (Object obj : objs){
             System.out.println(obj);
             System.out.println("");
         }
+//        System.out.println("All appointments");
+//        List<Object> objs = db.getData("Appointment", "");
+//        for (Object obj : objs){
+//            System.out.prSystem.out.println("All appointments");         
+        //List<Object> objs = db.getData("Appointment", "");
+  //      for (Object obj : objs){
+    //        System.out.println(obj);
+      //      System.out.println("");
+        //}intln(obj);
+//            System.out.println("");
+//        }
 //        System.out.println("*************");
 //        System.out.println("Getting some Appointments:");
 //        objs = db.getData("Appointment", "patientid='210'");

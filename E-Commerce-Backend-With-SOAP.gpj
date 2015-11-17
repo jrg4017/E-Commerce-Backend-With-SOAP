@@ -13,14 +13,14 @@ s#j0
 s#l0
 !177;g
 %\011xml%sXMLTagsGenerator.java
-%\011validate%sValidate.java
+%\011business%sValidate.java
 %\011server%sAppointmentService.java
 %\011E-Commerce-Backend-With-SOAP.gpj
 %\011lib%sTestDB.java
 %\011xml%sXML.java
 !177;f
 %\011xml%sXMLTagsGenerator.java
-%\011validate%sValidate.java
+%\011business%sValidate.java
 %\011server%sAppointmentService.java
 %\011E-Commerce-Backend-With-SOAP.gpj
 %\011lib%sTestDB.java
