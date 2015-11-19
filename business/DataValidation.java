@@ -6,10 +6,22 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 
 
-public class DataValidation extends Access{
-   public DataValidation(){
-      super();
-   }
+public class DataValidation{
+    private IComponentsData db;
+
+    /**
+     * initalizes the db and sets it for the class
+     */
+    public DataValidation(){
+           this.db = new DB();
+           this.db.initialLoad("LAMS");
+   }//end DataValidation
+
+    /**
+     *  gets the db
+     * @return this.db
+     */
+    public IComponentsData getDB(){ return this.db; }//end getDB
 /********************** TEST TEST TEST TEST ***************************************************************************/
    public static void main(String[] args){
       DataValidation v = new DataValidation();

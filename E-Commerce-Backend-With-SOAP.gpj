@@ -13,7 +13,7 @@ s#j0
 s#l0
 !234;g
 %\011xml%sXMLTagsGenerator.java
-%\011business%sAccess.java
+%\011business%sGetIDs.java
 %\011xml%sParseXML.java
 %\011server%sAppointmentService.java
 %\011E-Commerce-Backend-With-SOAP.gpj
@@ -22,7 +22,7 @@ s#l0
 %\011xml%sXML.java
 !234;f
 %\011xml%sXMLTagsGenerator.java
-%\011business%sAccess.java
+%\011business%sGetIDs.java
 %\011xml%sParseXML.java
 %\011server%sAppointmentService.java
 %\011E-Commerce-Backend-With-SOAP.gpj

@@ -3,15 +3,22 @@ package business;
 import components.data.*;
 import java.util.*;
 
-public class Access{
-    ArrayList<String> objectIds = new ArrayList<String>();
+/**
+ * for later if want to grab ids from the name submitted by the
+ * website and get the list of keys
+ */
+public class GetIDs{
+    private ArrayList<String> objectIds = new ArrayList<String>();
+    private IComponentsData db;
 
-    protected IComponentsData db;
-    public Access(){
-        this.db = new DB();
-        this.db.initialLoad("LAMS");
+    /**
+     *
+     * @param db
+
+    public GetIDs(IComponentsData db){
+        this.db = db;
     }
-
+/**********************************************************************************************************************/
     /**
      * gets the phleb id from the obj the name
      * @param name
@@ -91,4 +98,4 @@ public class Access{
         return rtn;
     }//end getObjId
 
-}
+}//end class
