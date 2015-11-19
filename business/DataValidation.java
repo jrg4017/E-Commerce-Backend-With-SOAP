@@ -6,18 +6,25 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 
 
-public class Validate{
-   IComponentsData db;
-   public Validate(){
-      this.db = new DB();
-      this.db.initialLoad("LAMS");
+public class DataValidation extends Access{
+   public DataValidation(){
+      super();
    }
 /********************** TEST TEST TEST TEST ***************************************************************************/
    public static void main(String[] args){
-      Validate v = new Validate();
+      DataValidation v = new DataValidation();
       //boolean b = v.appointmentReequirements("2004-02-01", "11:00:00");
       //System.out.println(b);
-      v.apptRequirements("2004-02-01", "11:00:00");
+       // ArrayList<String> apptInfo = new ArrayList<String>();
+//        apptInfo.add("240"); //24444
+//        apptInfo.add("110"); //115
+//        apptInfo.add("");
+//        apptInfo.add("80200");
+//        //set up as String patientId, String phlebId, String physId
+//       System.out.println(v.validateAppointmentInfo(apptInfo));
+
+      v.apptRequirements("2004-02-01", "11:00:00", "Florence Nightengale", "JacBeanstalk");
+     // System.out.println(p);
    }//end main
 /**********************************************************************************************************************/
 // Validation rules:
@@ -30,24 +37,27 @@ public class Validate{
      * @param object - the object aka table we are looking at
      * @param paramValue - the value of the param
      * @return boolean
-     * @see getObjectList
      */ // @param paramName = the name of the parameter
     public boolean isValidObject(String object, String paramValue){
         String param = "id='" + paramValue + "'";
-        List<Object> objs = this.getObjectList(object, param);
+        List<Object> objs = this.db.getData(object, param);
         //if size zero, it means the patient doesn't exist
         if(objs.size() > 0) return true;
         return false;
     }//end isValidObject()
     
-    private List<Object> getObjectList(String object, String param){
-         List<Object> objs = this.db.getData(object, param);
-         return objs;
-    }
 
-    public boolean apptRequirements(String date, String time, Phlebotomist phleb){
-        boolean available = this.isValidApptDateTime(date, time);
+
+    public void apptRequirements(String date, String time, String phlebotomistName, String patientName){
+        String patientId = this.getPatientIdFromName(patientName);
+        System.out.println(patientId);
+
+
+        //boolean available = this.isValidApptDateTime(date, time);
         //TODO add grab next available time on this day
+
+
+
         String param = "apptdate='" + java.sql.Date.valueOf(date) + "'";
         
         //TODO --below
@@ -61,42 +71,62 @@ public class Validate{
          * grab next available appointment
          */
 
-        
-        for (Appointment appt : phlebList){
-            
-        }
-       return available;
+
+       
 
     }
+
+
 
     /**
-     *
-     * @param apptInfo - set up as String patientId, String phlebId, String physId, String
-     * @return
+     * validate the keys grabbed and make sure there's no empty ids ("")
+     * @param apptInfo - set up as String patientId, String phlebId, String physId, String labTest
+     * @return String
      */
-    public String validateAppointmentInfo(ArrayList<String> apptInfo){ //assumption the website automaticatically generates name / id association
+    public String validateAppointmentInfo(HashMap<String, String> ids){
+        //grab information and verify that
+        if(ids.get("Patient") == "")      return "Patient was not found. Please try again or register patient.";
+        if(ids.get("Phlebotomist") == "") return "Phlebotomist not found. Please try another phlebotomist";
+        if(ids.get("PSC") == "" )         return "Patient Service Center not found. Please try another center";
+        if(ids.get("Physician") == "")    return "Physician not found. Please try another physician.";
+       // if(ids.get("LabTest" == "" )      return "Not a valid lab test. Please trya again";
+        //return messages if they don't exists; "" return if all is well
+        return "";
+    }//end validateAppointmentInfo
 
-        if( !isValidObject("Appointment", apptInfo.get(0)) )  return "Patient not found. Please try again or register with Celluar One.";
+    /**
+     * grab the keys from the names
+     * @param apptInfo <code>ArrayList<String></code>
+     * @return ids <code>HashMap<String, String></code>
+     */
+    public HashMap<String, String> validateGetIds(ArrayList<String> apptInfo){
+        HashMap<String, String> ids = new HashMap<String, String>();
 
-        if( !apptInfo.get(1).equals("") && !isValidObject("Phlebotomist", apptInfo.get(1)) ) return "Phlebotomist not found. Please try again";
-
-        if( !apptInfo.get(2).equals("") && !isValidObject("Physician", apptInfo.get(2) ))    return "Physician not found. Please try again";
-
-        if( ! )
-            return "";
+        ids.put("Patient", this.getPatientIdFromName(apptInfo.get(0)));
+        ids.put("Phlebotomist" ,this.getPhlebIdFromName(apptInfo.get(1)));
+        ids.put("Physician", this.getPhysicianIdFromName(apptInfo.get(2)));
+       // ids.add("LabTest", this.getLabTestIdFromName(apptInfo.get(3)));
+        ids.put("PSC", this.getPscIdFromName(apptInfo.get(4)));
+        //return ids of all neccessary information whether
+        return ids;
     }
-   
-   
+
+
 
     /**
      * checks to see if date and time is taken or not
-     * @param date
-     * @param time
-     * @return boolean
+     * @param date - the requested date
+     * @param time - the requested time
+     * @param paramName - the requested phlebotomist
+     * @param id - the requested
+     * @return
      */
-    public boolean isValidApptDateTime(String date, String time){
+    public boolean isValidApptDateTime(String date, String time, String plhebId, String pscid){
         String params = "apptdate='" +  java.sql.Date.valueOf(date) + "' AND appttime='" + java.sql.Time.valueOf(time) + "'";
-        List<Object> objs = this.getObjectList("Appointment", params);
+        if(!plhebId.equals("")) params += " AND " + "phlebid" + "='" + plhebId + "'";
+        if(!pscid.equals(""))   params += " AND " + "pscid" + "='" + pscid + "'";
+
+        List<Object> objs = this.db.getData("Appointment", params);
         
         //if greater than 0, then means appt exists
         if(objs.size() > 0) return false;
