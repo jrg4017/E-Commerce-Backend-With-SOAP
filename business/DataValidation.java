@@ -2,43 +2,40 @@ package business;
 
 import components.data.*;
 import java.util.*;
-import java.sql.*;
+import java.sql.Date;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
-
+import java.text.ParseException;
 
 public class DataValidation{
-    private IComponentsData db = null;
+/**********************************************************************************************************************/
+/******** ATTRIBUTES **************************************************************************************************/
     private HashMap<String, String> apptIds = new HashMap<String, String>();
-    private HashMap<String, String> tests = new HashMap<String, String>();
+    private ArrayList<String> tests = new ArrayList<String>();
     Appointment newAppt = null;
     GetInfo gi = null;
-
+    Database db = null;
 /**********************************************************************************************************************/
 /******************* CONSTRUCTOR **************************************************************************************/
-/**********************************************************************************************************************/
     /**
-     * initalizes the db and sets it for the class
+     * initalizes the getinfo class
      */
     public DataValidation(){
-        this.db = new DB();
-        this.db.initialLoad("LAMS");
-        this.gi = new GetInfo(this.db);
+        this.gi = new GetInfo();
    }//end DataValidation
     /**
-     * intializes the db and sets it for the class
+     * intializes the getinfo class
      * also sets the hashmaps for apptIds and tests
      * @param apptIds
      * @param tests
      */
-    public DataValidation(HashMap<String, String> apptIds, HashMap<String, String> tests){
-        this.db = new DB();
-        this.db.initialLoad("LAMS");
+    public DataValidation(HashMap<String, String> apptIds, ArrayList<String> tests){
+        this.setApptIds(apptIds);
         this.setTests(tests);
-        this.gi = new GetInfo(this.db);
+        this.gi = new GetInfo();
     }//end DataValidation
 /**********************************************************************************************************************/
 /******************** MUTATORS  ***************************************************************************************/
-/**********************************************************************************************************************/
     /**
      * sets the apptIDs so it can be validated
      * @param a <code>HashMap<String, String></code>
@@ -48,57 +45,66 @@ public class DataValidation{
      * sets the test id/dxcode so it can be validated
      * @param t <code>HashMap<String, String></code>
      */
-    public void setTests(HashMap<String, String> t){ this.tests = t; }
+    public void setTests(ArrayList<String> t){ this.tests = t; }
 /**********************************************************************************************************************/
 /******************** ACCESSORS ***************************************************************************************/
-/**********************************************************************************************************************/
-    /**
-     *  gets the db
-     * @return this.db
-     */
-    public IComponentsData getDB(){ return this.db; }//end getDB
+
     /**
      * gets the new Appointment that has been validated
      * @return this.newAppt
      */
     public Appointment getNewAppt(){ return this.newAppt; }
+    /**
+     * @param date
+     * @return java.sql.Date
+     */
+    private java.sql.Date getDate(String date){
+        try{
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date parsed = format.parse(date);
+            java.sql.Date sql = new java.sql.Date(parsed.getTime());
+            return sql;
+        }catch(ParseException pe){ pe.printStackTrace(); }
+        java.sql.Date date2 = new java.sql.Date(0,0,0);
+        return date2;
+    }//end getDate
+    /**
+     * @param time
+     * @return java.sql.Time
+     */
+    private java.sql.Time getTime(String time){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            long ms = sdf.parse(time).getTime();
+            java.sql.Time t = new Time(ms);
+            return t;
+        }catch(ParseException pe){ pe.printStackTrace(); }
+        Time t2;
+        return t2 = new java.sql.Time(0,0,0);
+    }//end getTime
 /********************** TEST TEST TEST TEST ***************************************************************************/
    public static void main(String[] args){
-      DataValidation v = new DataValidation();
       //boolean b = v.appointmentReequirements("2004-02-01", "11:00:00");
       //System.out.println(b);
-       // ArrayList<String> apptInfo = new ArrayList<String>();
-//        apptInfo.add("240"); //24444
-//        apptInfo.add("110"); //115
-//        apptInfo.add("");
-//        apptInfo.add("80200");
-//        //set up as String patientId, String phlebId, String physId
-//       System.out.println(v.validateAppointmentInfo(apptInfo));
-      //"2004-02-01", "11:00:00", "Florence Nightengale", "JacBeanstalk"
-      v.apptRequirements();
-     // System.out.println(p);
+       HashMap<String, String> ai = new HashMap<String, String>();
+       ai.put("Date", "2010-09-14");
+       ai.put("Time", "10:00:00");
+       ai.put("Physician", "20");
+       ai.put("Phlebotomist", "110");
+       ai.put("Patient", "210");
+       ai.put("PSC", "500");
+
+       ArrayList<String> tests = new ArrayList<String>();
+       tests.add("82088");
+       tests.add("290.0");
+       tests.add("86900");
+       tests.add("292.9");
+
+       DataValidation v = new DataValidation(ai, tests);
+       System.out.println(v.apptRequirements());
    }//end main
-
-
 /**********************************************************************************************************************/
 /*************** METHODS **********************************************************************************************/
-/**********************************************************************************************************************/
-
-    /**
-     * check to see if it is a valid object or not
-     * used to check to see if an appointment, patient, phlebotomist, physician
-     * and LabTest exist inside of the database
-     * @param object - the object aka table we are looking at
-     * @param paramValue - the value of the param
-     * @return boolean
-     */ // @param paramName = the name of the parameter
-    public boolean isValidObject(String object, String paramValue){
-        String param = "id='" + paramValue + "'";
-        List<Object> objs = this.db.getData(object, param);
-        //if size zero, it means the patient doesn't exist
-        if(objs.size() > 0) return true;
-        return false;
-    }//end isValidObject()
 
     /**
      * looks at the appointment requirements to see if requested appt is open
@@ -110,17 +116,18 @@ public class DataValidation{
         if(!this.validatePeople()) return "ERROR: not valid people";
 
         boolean apptTime = this.isValidApptDateTime();  //looks to see if appointment is open
-        boolean conflict;                               //to see if appointment request is far enough away
+        //boolean conflict;                               //to see if appointment request is far enough away
 
         //if not valid, grabs next appointment time else look to see if there's a conflict
         if(!apptTime) return this.nextAvailableAppt();
-        else conflict = this.isScheduleConflict();
+       // else conflict = this.isScheduleConflict();
 
-        if(conflict){ return this.nextAvailableAppt(); }
+        // if(conflict){ return this.nextAvailableAppt(); }//if conflict, return the nextAvailable appointment
 
         //if no conflict (false) set the appointment
-        this.setAppointment();
-        return "";
+        
+        // /this.setAppointment();
+        return "appt";
     }//end apptRequirements
 
     /**
@@ -128,14 +135,36 @@ public class DataValidation{
      * @return
      */
     public boolean validateAppointment(){
-        return this.isValidObject("Appointment", newAppt.getId());
+        return db.isValidObject("Appointment", newAppt.getId());
     }//end validateAppointment
 
     private String nextAvailableAppt(){
-        return "";
+        return "next avail";
     }
 
     private boolean isScheduleConflict(){
+        //get phlebotomist and psc objects to check conflicts
+        // Phlebotomist p = this.newAppt.getPhlebid();
+//         PSC psc = this.newAppt.getPscid();
+// 
+//         List<Appointment> pl = p.getAppointmentCollection();
+//         for(Appointment appt : ){
+//             if(appt.getDate() == java.sql.Date.valueOf(this.apptIds.get("Date"))){
+//                 this.compareDateTime(appt);
+//                 //TODO compare time
+//             }
+//         }
+
+      return false;
+    }
+
+    private boolean compareDateTime(Appointment pa){
+//         Time ptime = new Time(pa.getTime());
+//         Time newtime = new Time(this.apptIds.get("Time"));
+// 
+//         long c = ptime.getTime() - newtime.getTime();
+//         Time diff = new Time(c);
+
       return false;
     }
 
@@ -146,21 +175,23 @@ public class DataValidation{
      */
     private boolean validatePeople(){
         //validate everything and if not valid, return the message
-        if( !this.isValidObject("Patient", this.apptIds.get("Patient"))           ||
-                !this.isValidObject("Phlebotomist", this.apptIds.get("Phlebotomist")) ||
-                !this.isValidObject("Physician", this.apptIds.get("Physician"))       ||
-                !this.isValidObject("PSC", this.apptIds.get("PSC"))                      ){
-            return false;
+        if( !this.db.isValidObject("Patient", this.apptIds.get("Patient") ) ||
+            !this.db.isValidObject("Phlebotomist", this.apptIds.get("Phlebotomist") ) ||
+            !this.db.isValidObject("Physician", this.apptIds.get("Physician") ) ||
+            !this.db.isValidObject("PSC", this.apptIds.get("PSC") ) ){
+                return false;
         }
         return true;
-    }
+    }//end validatePeople
 
+    /**
+     * sets the new Appointment object
+     */
     public void setAppointment(){
-        //set the object
-        String d = this.apptIds.get("Date");
-        String t = this.apptIds.get("Time");
-
-        this.newAppt = new Appointment("800",java.sql.Date.valueOf(d),java.sql.Time.valueOf(t));
+        java.sql.Date d =this.getDate(this.apptIds.get("Date")); //get date
+        java.sql.Time t = this.getTime(this.apptIds.get("Time")); //get time
+        //create a new appointment object
+        this.newAppt = new Appointment("",d, t);
         //set the patient attribute
         Patient p = this.gi.getPatient(this.apptIds.get("Patient"));
         this.newAppt.setPatientid(p);
@@ -170,65 +201,30 @@ public class DataValidation{
         //set the psc attribute
         PSC psc = this.gi.getPSC(this.apptIds.get("PSC"));
         this.newAppt.setPscid(psc);
-
         //set the tests
-        //need to make an AppointmentLabTest obj - new AppointmentLabTest( //PARAMS?? );
-        // this.newAppt.setAppointmentLabTestCollection();
+        this.setAppointmentLabTests();
+    }//end setAppointment
+
+    private getLastId(){
+
     }
-
-
-
-
-
     /**
-     * grab the keys from the names
-     * @param apptInfo <code>ArrayList<String></code>
-     * @return ids <code>HashMap<String, String></code>
+     * set the appointment's labtests
      */
-//    public HashMap<String, String> validateGetIds(ArrayList<String> apptInfo){
-//        HashMap<String, String> ids = new HashMap<String, String>();
-//
-//        ValidateIds vi = new ValidateIds(this.db);
-//        ids.put("Patient", this.get);
-//        ids.put("Phlebotomist" ,this.getPhlebIdFromName(apptInfo.get(1)));
-//        ids.put("Physician", this.getPhysicianIdFromName(apptInfo.get(2)));
-//       // ids.add("LabTest", this.getLabTestIdFromName(apptInfo.get(3)));
-//        ids.put("PSC", this.getPscIdFromName(apptInfo.get(4)));
-//        //return ids of all neccessary information whether
-//        return ids;
-//    }
-
-    /**
-     * checks to see if date and time is taken or not
-     * @param date - the requested date
-     * @param time - the requested time
-     * @param paramName - the requested phlebotomist
-     * @param id - the requested
-     * @return
-     */
-    public boolean isValidApptDateTime(){
-        String params = "apptdate='" +  java.sql.Date.valueOf(this.apptIds.get("Date"));
-        params += "' AND appttime='" + java.sql.Time.valueOf(this.apptIds.get("Time")) + "'";
-        params += " AND " + "phlebid" + "='" + this.apptIds.get("Phlebotomist") + "'";
-        params += " AND " + "pscid" + "='" + this.apptIds.get("PSC") + "'";
-
-        List<Object> objs = this.db.getData("Appointment", params);
-
-        //if greater than 0, then means appt exists
-        if(objs.size() > 0) return false;
-        return true;
-    }
+    public void setAppointmentLabTests(){
+        List<AppointmentLabTest> list = new ArrayList<AppointmentLabTest>(); //create a new list
+        for(int i=0; i < list.size(); i++) {
+            //create an appointment object with necessary information
+            AppointmentLabTest test = new AppointmentLabTest(this.newAppt.getId(), this.tests.get(i), this.tests.get(i + 1));
+            //set the diagnosis and lab tests after getting the object
+            test.setDiagnosis(this.gi.getDiagnosis(this.tests.get(i + 1)));
+            test.setLabTest(this.gi.getLabTest(this.tests.get(i)));
+            list.add(test);//add to the list of objects
+            i++; //to skip next set
+        }
+        this.newAppt.setAppointmentLabTestCollection(list); //set the labTestCollection
+    }//end setAppointmentLabTest
 
 
 
-//   validPhysician         - The patient’s physician is valid and exists in the system
-//   validLabTest           - The ordered lab test is valid and exists in the system/
-//                          -  It takes phlebotomist 30 minutes to get from one PSC to another & be ready for an appointment
-//   validPhlebotomist      - The requested clinicalian (phlebotomist) is valid and exists in the syste
-//   appointmentRegistered  - The Appointment has been registered in the system once complete addAppointment process
-//   isAppointmentAvailable - checks to see if patient requested appointment is available
-//   appointmentParameters  -  see if appt parameters are valid, duration is 15 minutes, made from 8am to 5pm
-
-
-
-}
+}//end class

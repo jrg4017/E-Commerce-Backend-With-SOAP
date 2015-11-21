@@ -20,7 +20,7 @@ public class AppointmentService{
      */
     @WebMethod(operationName = "GetAllAppoinments")
     public String getAllAppointments(){
-        return "xmlString::getAllAppointments()";
+      return "";
     }//end getAllAppointments
 
     /**
@@ -29,9 +29,8 @@ public class AppointmentService{
      * @return xmlString String
      */
     @WebMethod(operationName = "GetAppoinment")
-    public String getAppointment(String appointNumber){
-        //stuff
-        return "xmlString::getAppointment(String appointNumber)";
+    public String getAppointment(String xml){
+      return "";
     }//end getAppointment
 
     /**
@@ -46,31 +45,3 @@ public class AppointmentService{
         return "xmlString::addAppointment(String xmlStyle)";
     }//end addAppointment
 }
-//
-// //annonation, defaults to className service if we don't change it
-// @WebService(serviceName = "OurArea")
-// public class Area{
-//    //no main method in a service
-//
-//    @WebMethod(operationName = "ETHello")
-//    public String helloWorld(){
-//       Helper h = new Helper();
-//       return h.zHelloWorld();
-//    }
-//
-//    @WebMethod(operationName = "ClassicHello")
-//    public String helloWorld2(){
-//       return "Hello World!";
-//    }
-//
-//    //defaults to this method name
-//    public double calcRectangle(double x, double y){
-//       return x*y;
-//    }
-//
-//    @WebMethod(exclude = true)
-//    //defaults to false, true makes it not show up in WDSL
-//    public double calcCircle(double r){
-//       return r*r*Math.PI;
-//    }
-// }

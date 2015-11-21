@@ -47,7 +47,8 @@ public class TestDB {
 //            psc = ((Appointment)obj).getPscid();
 //        }
 //        System.out.println("************");
-//        Appointment newAppt = new Appointment("800",java.sql.Date.valueOf("2009-09-01"),java.sql.Time.valueOf("10:15:00"));
+// *********************************************************************************************************************
+// Appointment newAppt = new Appointment("800",java.sql.Date.valueOf("2009-09-01"),java.sql.Time.valueOf("10:15:00"));
 //        //extra steps here due to persistence api and join, need to create objects in list
 //        List<AppointmentLabTest> tests = new ArrayList<AppointmentLabTest>();
 //        AppointmentLabTest test = new AppointmentLabTest("800","86900","292.9");
@@ -65,7 +66,7 @@ public class TestDB {
 //            System.out.println(obj);
 //            System.out.println("");
 //        }
-//
+//**********************************************************************************************************************
 //        System.out.println("***********");
 //        System.out.println("Lab Tests: ");
 //        objs = db.getData("AppointmentLabTest","");
