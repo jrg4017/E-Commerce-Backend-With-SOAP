@@ -1,101 +1,92 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package business;
 
-import components.data.*;
-import java.util.*;
+import components.data.IComponentsData;
+import components.data.LabTest;
+import components.data.PSC;
+import components.data.Patient;
+import components.data.Phlebotomist;
+import components.data.Physician;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-/**
- * for later if want to grab ids from the name submitted by the
- * website and get the list of keys
- */
-public class GetIDs{
-    private ArrayList<String> objectIds = new ArrayList<String>();
+public class GetIDs {
+    private ArrayList<String> objectIds = new ArrayList();
     private IComponentsData db;
 
-    /**
-     *
-     * @param db
-
-    public GetIDs(IComponentsData db){
+    public GetIDs(IComponentsData db) {
         this.db = db;
     }
-/**********************************************************************************************************************/
-    /**
-     * gets the phleb id from the obj the name
-     * @param name
-     * @return
-     */
-    protected String getPhlebIdFromName(String name){
+
+    protected String getPhlebIdFromName(String name) {
         Object o = this.getObject("Phlebotomist", name);
-        if(o != "" ){
-          Phlebotomist p = (Phlebotomist)o;
-          return p.getId();
-         }
-         return "";
-    }
-
-    /**
-     * gets the psc id from the obj the name
-     * @param name
-     * @return
-     */
-    protected String getPscIdFromName(String name){
-        Object o = this.getObject("PSC", name);
-        if(o != "" ){
-          PSC psc = (PSC)o;
-          return psc.getId();
-         }
-         return "";
-    }
-    
-    protected String getPhysicianIdFromName(String name){
-       Object o = this.getObject("Physician", name);
-           if(o != "" ){
-             Physician pn = (Physician)o;
-             return pn.getId();
-            }
+        if(o != "") {
+            Phlebotomist p = (Phlebotomist)o;
+            return p.getId();
+        } else {
             return "";
+        }
     }
 
-    /**
-     * gets the patient id from the obj using the name
-     * @param name
-     * @return
-     */
-    protected String getPatientIdFromName(String name){
+    protected String getPscIdFromName(String name) {
+        Object o = this.getObject("PSC", name);
+        if(o != "") {
+            PSC psc = (PSC)o;
+            return psc.getId();
+        } else {
+            return "";
+        }
+    }
+
+    protected String getPhysicianIdFromName(String name) {
+        Object o = this.getObject("Physician", name);
+        if(o != "") {
+            Physician pn = (Physician)o;
+            return pn.getId();
+        } else {
+            return "";
+        }
+    }
+
+    protected String getPatientIdFromName(String name) {
         Object o = this.getObject("Patient", name);
-        if(o != "" ){
-          Patient p = (Patient)o;
-          return p.getId();
-         }
-         return "";
+        if(o != "") {
+            Patient p = (Patient)o;
+            return p.getId();
+        } else {
+            return "";
+        }
     }
 
-    protected String getLabTestIdFromName(String name){
-       Object o = this.getObject("LabTest", name);
-        if(o != "" ){
-          LabTest lt = (LabTest)o;
-          return lt.getId();
-         }
-         return "";
-
+    protected String getLabTestIdFromName(String name) {
+        Object o = this.getObject("LabTest", name);
+        if(o != "") {
+            LabTest lt = (LabTest)o;
+            return lt.getId();
+        } else {
+            return "";
+        }
     }
 
+    public Object getObject(String object, String paramValue) {
+        String param = "name=\'" + paramValue + "\'";
+        List objs = this.db.getData(object, param);
+        if(objs.size() != 1) {
+            return "";
+        } else {
+            Object rtn = null;
 
+            Object obj;
+            for(Iterator var6 = objs.iterator(); var6.hasNext(); rtn = obj) {
+                obj = var6.next();
+            }
 
-    /**
-     * gets the object with associated params
-     * @param object
-     * @param paramValue
-     * @return
-     */
-    public Object getObject(String object, String paramValue){
-        String param = "name='" + paramValue + "'";
-        List<Object> objs = this.db.getData(object, param);
-        if(objs.size() != 1) return ""; //means no object or too many for the id
-        //looks at the object retreived and retutns it
-        Object rtn = null;
-        for(Object obj : objs) {  rtn = obj; }
-        return rtn;
-    }//end getObjId
-
-}//end class
+            return rtn;
+        }
+    }
+}

@@ -49,11 +49,18 @@ public class XMLTagsGenerator{
    */
    protected String getStartTag(){ return this.START_TAG; }
    
-  
+
 /**********************************************************************************/
 /********* METHODS ****************************************************************/
 /**********************************************************************************/
-   
+    /**
+     * returns the error string
+     * @return String
+     */
+    public String error(){
+      return this.getStartTag() + "<AppoinmentLis><error>ERROR: Appointment is not available</error></AppointmentList>";
+   }//end error
+
    /**
    * gets the full xml string and returns it
    * @return xml String
