@@ -108,6 +108,6 @@ public class XML{
     * @return String
     */
    public String error(){
-      return START_TAG + "<AppoinmentLis><error>ERROR: Appointment is not available</error></AppointmentList>";
+      return START_TAG + "<AppoinmentList><error>ERROR: Appointment is not available</error></AppointmentList>";
    }//end error
 }//end XML class
