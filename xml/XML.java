@@ -1,38 +1,40 @@
 package xml;
 
 import java.util.ArrayList;
-import components.data.*;
-import java.util.*;
+import components.data.Appointment;
+import components.data.Patient;
+import components.data.Phlebotomist;
+import components.data.PSC;
+import components.data.LabTest;
+import components.data.AppointmentLabTest;
+import components.data.Diagnosis;
+import java.util.List;
 
+/**
+ * deals with generating the XML tags for the data input
+ */
 public class XML{
+    public XML(){}
+    public XML(Appointment appt){
+        this.appt = appt;
+    }
+/**********************************************************************************************************************/
+/********** ATTRIBUTE *************************************************************************************************/
    private final String START_TAG = "<?xml version='1.0' encoding='UTF-8' standalone='no' ?>";
    private Appointment appt;
-/***********************************************************************************************/
-/********* CONSTRUCTORS ************************************************************************/
+/**********************************************************************************************************************/
+/************ MUTATOR *************************************************************************************************/
+   public void setAppointment(Appointment appt){ this.appt = appt; }//end setAppointmnet
+/**********************************************************************************************************************/
+/*********** ACCESSORS ************************************************************************************************/
+   public String getTagNameStart(){ return "<AppointmentList>"; } //end getTagNameStart
+   public String getTagNameEnd(){ return "</AppointmentList>"; } //end getTagNameEnd
+   public String getStartTag(){ return START_TAG; } //end getStartTad
+/**********************************************************************************************************************/
+/************* METHODS ************************************************************************************************/
     /**
-     * sets the appoinment object
-     * @param appt
-     */
-    public XML(Appointment appt){
-      this.appt = appt;
-   }//end XML
-
-    public XML(){}
-/***********************************************************************************************/
-/************ MUTATOR **************************************************************************/   
-   /**
-   * @param appt appoinment
-   */
-   public void setAppointment(Appointment appt){ this.appt = appt; }
-/************************************************************************************************/
-/*********** ACCESSORS **************************************************************************/
-   public String getTagNameStart(){ return "<AppointmentList>"; }
-   public String getTagNameEnd(){ return "</AppointmentList>"; }
-   public String getStartTag(){ return START_TAG; }
-/***********************************************************************************************/
-/************* METHODS *************************************************************************/
-    /**
-     * gets the appointment String
+     * gets the appointment String from the corresponding elements
+     * Appointment obj, Patient obj, Phlebotomist obj, PSC obj, LabTest <code>List<obj></code>
      * @return xml String
      */
    public String appointmentXML(){
@@ -92,7 +94,7 @@ public class XML{
    private String getLabTests(){
       List<AppointmentLabTest> alt = this.appt.getAppointmentLabTestCollection();
       String xml = "<allLabTests>";
-
+       //goes through the List and adds neccessary string
       for(AppointmentLabTest a: alt){
          Diagnosis diagnosis = a.getDiagnosis();
          LabTest labTest = a.getLabTest();

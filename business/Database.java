@@ -3,24 +3,27 @@ import components.data.*;
 import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.sql.Time;
 
 public class Database{
+/**********************************************************************************************************************/
+/******* ATTRIBUTE ****************************************************************************************************/
     IComponentsData icdDB;
-/***************************************************************************************************/
-/******** CONSTRUCTOR ******************************************************************************/
+    GetInfo gi;
+/**********************************************************************************************************************/
+/******** CONSTRUCTOR *************************************************************************************************/
+    /**
+     * intializes the database
+     */
     public Database(){
         this.icdDB = new DB();
-        this.icdDB.initialLoad("LAMS");
-    }
-/***************************************************************************************************/
- /******** ACCESSORS *******************************************************************************/
-    /**
-     *  gets the db
-     * @return this.db
-     */
+        this.gi = new GetInfo(this.icdDB);
+    }//end Database
+/**********************************************************************************************************************/
+ /******** ACCESSORS **************************************************************************************************/
     public IComponentsData getDB(){ return this.icdDB; }//end getDB
    /**
      * @param date
@@ -50,6 +53,23 @@ public class Database{
         Time t2;
         return t2 = new java.sql.Time(0,0,0);
     }//end getTime
+    /**
+     * @param _id
+     * @return
+     */
+    public List<Object> getAppointment(String _id){
+        String id = "id='" + _id + "'";
+        List<Object> obj = this.icdDB.getData("Appointment", id);
+        return obj;
+    }//end getAppointment
+/**********************************************************************************************************************/
+/************* METHOD *************************************************************************************************/
+    /**
+     * loads the db
+     * @return boolean
+     */
+    public boolean load(){ return this.icdDB.initialLoad("LAMS"); }
+
     /**
      * check to see if it is a valid object or not
      * used to check to see if an appointment, patient, phlebotomist, physician
@@ -103,13 +123,73 @@ public class Database{
      * gets the last appointment id
      * @return String
      */
-    public String getLastAppointmentId(){
-        return "";
+    public String getAppointmentId(){
+        //get all appointments
+        List<Object> objs = this.icdDB.getData("Appointment", "");
+        int highestId = 0; //for the highest id
+        for(Object obj: objs){ //look at each appointment object
+            Appointment appt = (Appointment)obj;
+            int temp = Integer.parseInt(appt.getId()); // grab the id
+            if(temp > highestId){ //if temp is higher, save as is
+                highestId = temp;
+            }
+        }
+        //add 10 to the id and return it to get the next id
+        highestId += 10;
+        return String.valueOf(highestId);
     }//end getLastAppointmentId
 
-    public List<Object> getAppointment(String _id){
-        String id = "id='" + _id + "'";
-        List<Object> obj = this.icdDB.getData("Appointment", id);
-        return obj;
+    public static void main(String[] args){
+        Database d = new Database();
+        d.getAppointmentId();
     }
+
+    /**
+     * set the appointment's labtests
+     * @param tests
+     * @param newAppt
+     */
+    public void setAppointmentLabTests(ArrayList<String> tests, Appointment newAppt){
+        List<AppointmentLabTest> list = new ArrayList<AppointmentLabTest>(); //create a new list
+
+        for(int i=0; i < list.size(); i++) {
+            //create an appointment object with necessary information
+            AppointmentLabTest test = new AppointmentLabTest(newAppt.getId(), tests.get(i), tests.get(i + 1));
+            //set the diagnosis and lab tests after getting the object
+            test.setDiagnosis(this.gi.getDiagnosis(tests.get(i + 1)));
+            test.setLabTest(this.gi.getLabTest(tests.get(i)));
+            list.add(test);//add to the list of objects
+            i++; //to skip next set
+        }
+        newAppt.setAppointmentLabTestCollection(list); //set the labTestCollection
+    }//end setAppointmentLabTest
+
+    /**
+     * sets the new Appointment object
+     * @param apptIds
+     * @param tests
+     * @return newAppt Appointment
+     */
+    public Appointment setAppointment(HashMap<String, String> apptIds, ArrayList<String> tests){
+        //get the date and time in sql format
+        java.sql.Date d = this.getDate(apptIds.get("Date")); //get date
+        java.sql.Time t = this.getTime(apptIds.get("Time")); //get time
+
+        //create a new appointment object
+        Appointment newAppt = new Appointment(this.getAppointmentId(),d, t);
+
+        //set the patient attribute
+        Patient p = this.gi.getPatient(apptIds.get("Patient"));
+        newAppt.setPatientid(p);
+        //set the phlebotomist attribute
+        Phlebotomist ph = this.gi.getPhlebotomist(apptIds.get("Phlebotomist"));
+        newAppt.setPhlebid(ph);
+        //set the psc attribute
+        PSC psc = this.gi.getPSC(apptIds.get("PSC"));
+        newAppt.setPscid(psc);
+        //set the tests
+        this.setAppointmentLabTests(tests, newAppt);
+
+        return newAppt;
+    }//end setAppointment
 }//end Database class

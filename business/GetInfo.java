@@ -13,41 +13,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * gets the id from a name or gets the object from the id
+ */
 public class GetInfo {
 /**********************************************************************************************************************/
 /******** ATTRIBUTE ***************************************************************************************************/
     private IComponentsData db; //the db to grab information
 /**********************************************************************************************************************/
+/******** CONSTRUCTOR *************************************************************************************************/ 
+    public GetInfo(IComponentsData db){ this.db = db; }
+/**********************************************************************************************************************/
 /*********** GET OBJ METHODS ******************************************************************************************/
-    /**
-     * @param id the phleb id
-     * @return Phlebotomist object
-     */
-    public Phlebotomist getPhlebotomist(String id){ return (Phlebotomist)this.getObject("Phlebotomist", "id", id); }
-    /**
-     * @param id the psc id
-     * @return PSC object
-     */
+    public Phlebotomist getPhlebotomist(String id){ return (Phlebotomist)this.getObject("Phlebotomist", "id", id); } 
     public PSC getPSC(String id){ return (PSC)this.getObject("PSC", "id", id); }
-    /**
-     * @param id the physician id
-     * @return Physician object
-     */
     public Physician getPhysician(String id){ return (Physician)this.getObject("Physician", "id", id); }
-    /**
-     * @param id the patient id
-     * @return Patient obj
-     */
     public Patient getPatient(String id){ return (Patient)this.getObject("Patient", "id", id); }
-    /**
-     * @param code the diagnosis id
-     * @return Diagnosis obj
-     */
     public Diagnosis getDiagnosis(String code){ return (Diagnosis)this.getObject("Diagnosis", "code", code); }
-    /**
-     * @param id the labtest id
-     * @return LabTest obj
-     */
     public LabTest getLabTest(String id){ return (LabTest)this.getObject("LabTest", "id", id); }
 /**********************************************************************************************************************/
 /************** GET ID FROM NAME METHODS ******************************************************************************/
@@ -97,7 +79,6 @@ public class GetInfo {
             return p.getId();
         } else  return "";
     }//end PatientIdFromName
-
     /**
      * @param name of the LabTest
      * @return String id / empty if doesn't exist

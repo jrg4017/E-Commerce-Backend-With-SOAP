@@ -4,16 +4,23 @@ import business.*;
 import xml.*;
 import java.util.*;
 import components.data.*;
-public class Main{
-    Database database = null;
 
+/**
+ * created to keep the AppointmentService's code minimal
+ */
+public class Main{
+/**********************************************************************************************************************/
+/********** ATTRIBUTE *************************************************************************************************/
+    Database database = null;
+/**********************************************************************************************************************/
+/************ METHODS *************************************************************************************************/
     /**
      * intialize the database
      * @return boolean
      */
     public boolean initialize(){
         this.database = new Database();
-        return true;
+        return this.database.load();
     }//end intiialize
 
     /**
@@ -61,16 +68,19 @@ public class Main{
         return xmlStr;
     }//end getAppointment
 
+    /**
+     *
+     * @param xmlStyle
+     * @return
+     */
     public String addAppointment(String xmlStyle){
 
         return "";
-    }
+    }//end addAppointment
 
     public static void main(String[] args){
         Main m = new Main();
         m.initialize();
         System.out.println(m.getAppointment("810"));
     }
-
-
-}
+}//end Main class
