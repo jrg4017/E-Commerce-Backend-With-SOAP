@@ -5,13 +5,16 @@ import java.util.ArrayList;
 
 @WebService(serviceName = "AppointmentService")
 public class AppointmentService{
+    Main main = new Main();
     /**
      * intitalize the database
      * @return msg String - whether db initialized or not
      */
     @WebMethod(operationName = "Initialize")
     public String initialize(){
-        return "xmlString::initialize()";
+        boolean initalized = m.initialize();
+        if(initalized) return "Database Initialized";
+        return "Database failed to initalized"
     }//end initialize
 
     /**

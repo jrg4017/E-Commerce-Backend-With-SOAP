@@ -48,40 +48,11 @@ public class DataValidation{
     public void setTests(ArrayList<String> t){ this.tests = t; }
 /**********************************************************************************************************************/
 /******************** ACCESSORS ***************************************************************************************/
-
     /**
      * gets the new Appointment that has been validated
      * @return this.newAppt
      */
     public Appointment getNewAppt(){ return this.newAppt; }
-    /**
-     * @param date
-     * @return java.sql.Date
-     */
-    private java.sql.Date getDate(String date){
-        try{
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date parsed = format.parse(date);
-            java.sql.Date sql = new java.sql.Date(parsed.getTime());
-            return sql;
-        }catch(ParseException pe){ pe.printStackTrace(); }
-        java.sql.Date date2 = new java.sql.Date(0,0,0);
-        return date2;
-    }//end getDate
-    /**
-     * @param time
-     * @return java.sql.Time
-     */
-    private java.sql.Time getTime(String time){
-        try{
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-            long ms = sdf.parse(time).getTime();
-            java.sql.Time t = new Time(ms);
-            return t;
-        }catch(ParseException pe){ pe.printStackTrace(); }
-        Time t2;
-        return t2 = new java.sql.Time(0,0,0);
-    }//end getTime
 /********************** TEST TEST TEST TEST ***************************************************************************/
    public static void main(String[] args){
       //boolean b = v.appointmentReequirements("2004-02-01", "11:00:00");
@@ -115,7 +86,7 @@ public class DataValidation{
         //validate everyone
         if(!this.validatePeople()) return "ERROR: not valid people";
 
-        boolean apptTime = this.isValidApptDateTime();  //looks to see if appointment is open
+        boolean apptTime = this.db.isValidApptDateTime(this.apptIds);  //looks to see if appointment is open
         //boolean conflict;                               //to see if appointment request is far enough away
 
         //if not valid, grabs next appointment time else look to see if there's a conflict
@@ -135,7 +106,7 @@ public class DataValidation{
      * @return
      */
     public boolean validateAppointment(){
-        return db.isValidObject("Appointment", newAppt.getId());
+        return this.db.isValidObject("Appointment", newAppt.getId());
     }//end validateAppointment
 
     private String nextAvailableAppt(){
@@ -188,8 +159,8 @@ public class DataValidation{
      * sets the new Appointment object
      */
     public void setAppointment(){
-        java.sql.Date d =this.getDate(this.apptIds.get("Date")); //get date
-        java.sql.Time t = this.getTime(this.apptIds.get("Time")); //get time
+        java.sql.Date d = this.db.getDate(this.apptIds.get("Date")); //get date
+        java.sql.Time t = this.db.getTime(this.apptIds.get("Time")); //get time
         //create a new appointment object
         this.newAppt = new Appointment("",d, t);
         //set the patient attribute
@@ -205,9 +176,6 @@ public class DataValidation{
         this.setAppointmentLabTests();
     }//end setAppointment
 
-    private getLastId(){
-
-    }
     /**
      * set the appointment's labtests
      */
@@ -224,7 +192,5 @@ public class DataValidation{
         }
         this.newAppt.setAppointmentLabTestCollection(list); //set the labTestCollection
     }//end setAppointmentLabTest
-
-
 
 }//end class

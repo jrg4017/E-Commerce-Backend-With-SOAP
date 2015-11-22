@@ -5,21 +5,19 @@ import java.util.ArrayList;
 public class XMLTagsGenerator{
    private String root;
    private ArrayList<XML> alXml;
-   
    private final String START_TAG = "<?xml version='1.0' encoding='UTF-8' standalone='no' ?>";
-    
+
    /**
    * gets the list of required XML objects generated
    * @param root String
    * @param alXml ArrayList<XML>
    */
-   public XMLTagsGenerator(String root, ArrayList<XML> alXml){
+   public XMLTagsGenerator(String root){
       this.root = root;
-      this.alXml = alXml;
    }//end XMLTagsGenerator
-   
+
    public XMLTagsGenerator(){}
-   
+
 /**********************************************************************************/
 /********* MUTATORS ***************************************************************/
 /**********************************************************************************/   
@@ -29,10 +27,7 @@ public class XMLTagsGenerator{
    */
    public void setRoot(String root){ this.root = root; }
    
-   /**
-   * sets the arrayList of Tags
-   *
-   */
+   public void setObject(Appointment appt){ this.Appointment = appt; }
    
 /**********************************************************************************/
 /********* ACCESSORS **************************************************************/
@@ -48,7 +43,6 @@ public class XMLTagsGenerator{
    * @return this.START_TAG String
    */
    protected String getStartTag(){ return this.START_TAG; }
-   
 
 /**********************************************************************************/
 /********* METHODS ****************************************************************/

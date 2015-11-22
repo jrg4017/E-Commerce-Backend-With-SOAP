@@ -1,11 +1,18 @@
 package business;
+import components.data.*;
+import java.util.List;
+import java.util.Date;
+import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.sql.Time;
 
 public class Database{
     IComponentsData icdDB;
 /***************************************************************************************************/
 /******** CONSTRUCTOR ******************************************************************************/
     public Database(){
-        this.icdDb = new DB();
+        this.icdDB = new DB();
         this.icdDB.initialLoad("LAMS");
     }
 /***************************************************************************************************/
@@ -14,8 +21,35 @@ public class Database{
      *  gets the db
      * @return this.db
      */
-    public IComponentsData getDB(){ return this.icdDb; }//end getDB
-
+    public IComponentsData getDB(){ return this.icdDB; }//end getDB
+   /**
+     * @param date
+     * @return java.sql.Date
+     */
+    public java.sql.Date getDate(String date){
+        try{
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date parsed = format.parse(date);
+            java.sql.Date sql = new java.sql.Date(parsed.getTime());
+            return sql;
+        }catch(ParseException pe){ pe.printStackTrace(); }
+        java.sql.Date date2 = new java.sql.Date(0,0,0);
+        return date2;
+    }//end getDate
+    /**
+     * @param time
+     * @return java.sql.Time
+     */
+    public java.sql.Time getTime(String time){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            long ms = sdf.parse(time).getTime();
+            java.sql.Time t = new Time(ms);
+            return t;
+        }catch(ParseException pe){ pe.printStackTrace(); }
+        Time t2;
+        return t2 = new java.sql.Time(0,0,0);
+    }//end getTime
     /**
      * check to see if it is a valid object or not
      * used to check to see if an appointment, patient, phlebotomist, physician
@@ -40,7 +74,7 @@ public class Database{
     public boolean addApptToDB(Appointment appt){
         if(!this.icdDB.addData(appt)) return false;
         //verify that it's been added to the database
-        if(this.isValidObject("Appointment", this.newAppt.getId()))Sytem.out.println(true)) return true;
+        if(this.isValidObject("Appointment", appt.getId())) return true;
         return false;
     }//end addApptToDB
 
@@ -52,11 +86,11 @@ public class Database{
      * @param id - the requested
      * @return
      */
-    public boolean isValidApptDateTime(){
-        String params = "apptdate='" +  this.getDate(this.apptIds.get("Date"));
-        params += "' AND appttime='" + this.getTime(this.apptIds.get("Time")) + "'";
-        params += " AND " + "phlebid" + "='" + this.apptIds.get("Phlebotomist") + "'";
-        params += " AND " + "pscid" + "='" + this.apptIds.get("PSC") + "'";
+    public boolean isValidApptDateTime(HashMap<String, String> apptIds){
+        String params = "apptdate='" +  this.getDate(apptIds.get("Date"));
+        params += "' AND appttime='" + this.getTime(apptIds.get("Time")) + "'";
+        params += " AND " + "phlebid" + "='" + apptIds.get("Phlebotomist") + "'";
+        params += " AND " + "pscid" + "='" + apptIds.get("PSC") + "'";
 
         List<Object> objs = this.icdDB.getData("Appointment", params);
 
@@ -65,4 +99,12 @@ public class Database{
         return true;
     }//end isValidApptDateTime
 
-}//end
+    /**
+     * gets the last appointment id
+     * @return String
+     */
+    public String getLastAppointmentId(){
+        return "";
+    }//end getLastAppointmentId
+
+}//end Database class
