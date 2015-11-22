@@ -1,137 +1,113 @@
 package xml;
 
 import java.util.ArrayList;
+import components.data.*;
+import java.util.*;
 
 public class XML{
-   private String tagName;
-   private ArrayList<String> alIDs;
-   private ArrayList<String> alData;
-   private boolean addIDs = false;
-   private boolean addInner = false;
+   private final String START_TAG = "<?xml version='1.0' encoding='UTF-8' standalone='no' ?>";
+   private Appointment appt;
 /***********************************************************************************************/
 /********* CONSTRUCTORS ************************************************************************/
-/***********************************************************************************************/   
-   /**
-   * set the necessary information to create a tag
-   * @param tagName String
-   * @param alIDs ArrayList<String>
-   * @param alData ArrayList<String>
-   */
-   public XML(String tagName, ArrayList<String> alIDs, ArrayList<String> alData){
-      this.tagName = tagName;
-      this.alIDs = alIDs;
-      this.alData = alData;
-      
-      this.setAddIDs();
-      this.setAddInner();
-   }
-   
-   public XML(){}
-   /**
-   * a constructor for the root tag name
-   * doesn't need anything else
-   */
-   public XML(String tagName){
-     this.tagName = tagName; 
-   }//end 
-   
-/***********************************************************************************************/
-/************ MUTATORS *************************************************************************/
-/***********************************************************************************************/   
-   /**
-   * if the size of alids is bigger than 0 
-   * then allow the addition of ids
-   */
-   public void setAddIDs(){
-      if(this.alIDs.size() != 0 ){
-         this.addIDs = true;
-      }
-   } 
-   
-   /**
-   * if the aldata size is greater than the alIDs size
-   * set the addInner to true
-   */
-   public void setAddInner(){
-      if( (this.alIDs.size() < this.alData.size()) && this.alData.size() > 0){
-         this.addInner = true;
-      }
-   }//end setAddInner
+    /**
+     * sets the appoinment object
+     * @param appt
+     */
+    public XML(Appointment appt){
+      this.appt = appt;
+   }//end XML
 
+    public XML(){}
+/***********************************************************************************************/
+/************ MUTATOR **************************************************************************/   
+   /**
+   * @param appt appoinment
+   */
+   public void setAppointment(Appointment appt){ this.appt = appt; }
 /************************************************************************************************/
 /*********** ACCESSORS **************************************************************************/
-/************************************************************************************************/   
-   /**
-   * if the addIDs is ture, return with ids
-   * else return ">"
-   * @return String
-   */
-   public String getAddIDs(){ 
-      if(this.addIDs){ 
-         return this.addIDs(); 
-       }
-       return "";
-   }//end getAddIDs
-  
-   /**
-   * returns the closing tag and the inner data if any
-   * @return String
-   */
-   public String getAddInner(){
-      if(this.addInner){
-         return this.addInnerData();
-      }
-       return ">";
-   }//end getAddInner
-   
-   /**
-   * gets the beginning tag name
-   * @return String 
-   */
-   public String getTagNameStart(){ return "<" + this.tagName; }
-   
-   /**
-   * gets the ending tag name
-   * @return String 
-   */
-   public String getTagNameEnd(){ return "</" + this.tagName + ">"; }
-   
+   public String getTagNameStart(){ return "<AppointmentList>"; }
+   public String getTagNameEnd(){ return "</AppointmentList>"; }
+   public String getStartTag(){ return START_TAG; }
 /***********************************************************************************************/
 /************* METHODS *************************************************************************/
-/***********************************************************************************************/   
-   /**
-   * adds the ids inside of the tag 
-   * @return xml String
-   */
-   private String addIDs(){
-      String xml = " ";
-      for(int i =0; i < alIDs.size(); i++){
-         xml += this.alIDs.get(i) + "='" + this.alData.get(i) + "' ";
-      }   
-     return xml; 
-   } //end addIDs
-   
-   /**
-   * grabs inner data if alData is longer than alIDs
-   * else just a closing tag is returned
-   * @return xml String
-   */
-   private String addInnerData(){
-      String xml = ">" + this.alData.get( this.alData.size() - 1 );   
+    /**
+     * gets the appointment String
+     * @return xml String
+     */
+   public String appointmentXML(){
+      String xml = this.getAppointmentInfo() + this.getPatientInfo();
+      xml += this.getPhlebInfo() + this.getPscInfo() + this.getLabTests();
+      xml += "</appointment>";
       return xml;
-   }//end innerData
-   
+   }//end appointmentXML
+
    /**
-   * gets the entire xml string with closing tag if desired
-   * @param end boolean - whether to add ending tag
-   * @return xml String
-   */
-   public String toString(boolean end){
-      String xml = this.getTagNameStart() + this.getAddIDs() + this.getAddInner();
-      
-      if(end) xml += this.getTagNameEnd();
-      
+    * gets the xml string from appointment object
+    * @return xml String
+     */
+   private String getAppointmentInfo(){
+      String xml = "<appointment date='" + appt.getApptdate() + "' id='" + appt.getId() + "' ";
+      xml += "time='" + appt.getAppttime() + "'>";
       return xml;
-   }//end toString
-   
+   }//end getAppointment Info
+
+   /**
+    * gets the patient info and returns it in xml string
+    * @return xml String
+     */
+   private String getPatientInfo(){
+      Patient patient = this.appt.getPatientid();
+      String xml = "<patient id='" + patient.getId();
+      xml += "'><name>" + patient.getName() + "</name><address>" + patient.getAddress() + "</address>";
+      xml += "<insurance>"+ patient.getInsurance() +"</insurance><dob>" + patient.getDateofbirth() + "</dob></patient>";
+      return xml;
+   }//end getPatientInfo
+
+   /**
+    * gets the phlebotomist object information and returns it in xml string
+    * @return xml String
+     */
+   private String getPhlebInfo(){
+      Phlebotomist phlebotomist = this.appt.getPhlebid();
+      String xml = "<phlebotomist id='" + phlebotomist.getId() + "'><name>" + phlebotomist.getName() + "</name>";
+      xml += "</phlebotomist>";
+      return xml;
+   }//end getPhlebInfo
+
+   /**
+    * gets the psc object info and returns it in xml string
+    * @return xml String
+     */
+   private String getPscInfo(){
+      PSC psc = this.appt.getPscid();
+      String xml = "<psc id='" + psc.getId() + "'><name>" + psc.getName() + "</name></psc>";
+      return xml;
+   }//end getPscInfp
+
+    /**
+     * gets the lab test objects and return it in xml string
+     * @return xml String
+     */
+   private String getLabTests(){
+      List<AppointmentLabTest> alt = this.appt.getAppointmentLabTestCollection();
+      String xml = "<allLabTests>";
+
+      for(AppointmentLabTest a: alt){
+         Diagnosis diagnosis = a.getDiagnosis();
+         LabTest labTest = a.getLabTest();
+         xml += "<appointmentLabTest apptId='" + this.appt.getId() + "' dxcode='" + diagnosis.getCode() ;
+         xml += "' labTestId='" + labTest.getId() + "'/>";
+      }
+       xml += "</allLabTests>";
+      return xml;
+   }//end getLabTests
+
+   /**
+    * returns the error string
+    * @return String
+    */
+   public String error(){
+      return START_TAG + "<AppoinmentLis><error>ERROR: Appointment is not available</error></AppointmentList>";
+   }//end error
 }//end XML class

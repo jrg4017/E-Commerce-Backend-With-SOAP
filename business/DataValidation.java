@@ -53,27 +53,6 @@ public class DataValidation{
      * @return this.newAppt
      */
     public Appointment getNewAppt(){ return this.newAppt; }
-/********************** TEST TEST TEST TEST ***************************************************************************/
-   public static void main(String[] args){
-      //boolean b = v.appointmentReequirements("2004-02-01", "11:00:00");
-      //System.out.println(b);
-       HashMap<String, String> ai = new HashMap<String, String>();
-       ai.put("Date", "2010-09-14");
-       ai.put("Time", "10:00:00");
-       ai.put("Physician", "20");
-       ai.put("Phlebotomist", "110");
-       ai.put("Patient", "210");
-       ai.put("PSC", "500");
-
-       ArrayList<String> tests = new ArrayList<String>();
-       tests.add("82088");
-       tests.add("290.0");
-       tests.add("86900");
-       tests.add("292.9");
-
-       DataValidation v = new DataValidation(ai, tests);
-       System.out.println(v.apptRequirements());
-   }//end main
 /**********************************************************************************************************************/
 /*************** METHODS **********************************************************************************************/
 

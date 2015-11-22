@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 @WebService(serviceName = "AppointmentService")
 public class AppointmentService{
-    Main main = new Main();
+    Main m = new Main();
     /**
      * intitalize the database
      * @return msg String - whether db initialized or not
@@ -14,7 +14,7 @@ public class AppointmentService{
     public String initialize(){
         boolean initalized = m.initialize();
         if(initalized) return "Database Initialized";
-        return "Database failed to initalized"
+        return "Database failed to initalized";
     }//end initialize
 
     /**
@@ -23,7 +23,7 @@ public class AppointmentService{
      */
     @WebMethod(operationName = "GetAllAppoinments")
     public String getAllAppointments(){
-      return "";
+      return this.m.getAllAppointments();
     }//end getAllAppointments
 
     /**
@@ -32,8 +32,8 @@ public class AppointmentService{
      * @return xmlString String
      */
     @WebMethod(operationName = "GetAppoinment")
-    public String getAppointment(String xml){
-      return "";
+    public String getAppointment(String appointNumber){
+      return this.m.getAppointment(appointNumber);
     }//end getAppointment
 
     /**
@@ -44,7 +44,6 @@ public class AppointmentService{
      */
     @WebMethod(operationName = "AddAppointment")
     public String addAppointment(String xmlStyle){
-        //stuff
-        return "xmlString::addAppointment(String xmlStyle)";
+        return this.m.addAppointment(xmlStyle);
     }//end addAppointment
 }

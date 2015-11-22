@@ -107,4 +107,12 @@ public class Database{
         return "";
     }//end getLastAppointmentId
 
+    public Object getAppointment(String _id){
+        String id = "id='" + _id + "'";
+        Object obj = this.icdDB.getData("Appointment", id);
+        if(obj != ""){
+            return obj;
+        }
+        return "";
+    }
 }//end Database class
