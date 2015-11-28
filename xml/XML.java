@@ -8,16 +8,21 @@ import components.data.*;
  * @author Julianna Gabler
  */
 public class XML{
-    public XML(){}
-    public XML(Appointment appt){
-        this.appt = appt;
-    }
 /**********************************************************************************************************************/
 /********** ATTRIBUTE *************************************************************************************************/
    private final String START_TAG = "<?xml version='1.0' encoding='UTF-8' standalone='no' ?>";
    private Appointment appt;
 /**********************************************************************************************************************/
-/************ MUTATOR *************************************************************************************************/
+/********* CONSTRUCTOR ************************************************************************************************/
+   /**
+    * sets the appointment object for getting the neccessary information
+    * @param appt
+     */
+    public XML(Appointment appt){
+        this.appt = appt;
+    }
+/**********************************************************************************************************************/
+/************ MUTATORS ************************************************************************************************/
    public void setAppointment(Appointment appt){ this.appt = appt; }//end setAppointmnet
 /**********************************************************************************************************************/
 /*********** ACCESSORS ************************************************************************************************/
@@ -32,6 +37,9 @@ public class XML{
      * @return xml String
      */
    public String appointmentXML(){
+      //if the appointment object is empty or null, return the error xml string
+      if(this.appt == "" || this.appt == null){ return error(); }
+      //else contunie with this
       String xml = this.getAppointmentInfo() + this.getPatientInfo();
       xml += this.getPhlebInfo() + this.getPscInfo() + this.getLabTests();
       xml += "</appointment>";
@@ -43,8 +51,8 @@ public class XML{
     * @return xml String
      */
    private String getAppointmentInfo(){
-      String xml = "<appointment date='" + appt.getApptdate() + "' id='" + appt.getId() + "' ";
-      xml += "time='" + appt.getAppttime() + "'>";
+      String xml = "<appointment date='" + this.appt.getApptdate() + "' id='" + this.appt.getId() + "' ";
+      xml += "time='" + this.appt.getAppttime() + "'>";
       return xml;
    }//end getAppointment Info
 
@@ -104,6 +112,6 @@ public class XML{
     * @return String
     */
    public String error(){
-      return START_TAG + "<AppoinmentList><error>ERROR: Appointment is not available</error></AppointmentList>";
+      return START_TAG + "<error>ERROR: Appointment is not available</error>";
    }//end error
 }//end XML class
