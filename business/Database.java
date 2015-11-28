@@ -1,13 +1,13 @@
 package business;
 import components.data.*;
-import java.util.List;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
+import java.util.*;
+import java.text.*;
 import java.sql.Time;
 
+/**
+ *
+ * @author Julianna Gabler
+ */
 public class Database{
 /**********************************************************************************************************************/
 /******* ATTRIBUTE ****************************************************************************************************/
@@ -138,11 +138,6 @@ public class Database{
         highestId += 10;
         return String.valueOf(highestId);
     }//end getLastAppointmentId
-
-    public static void main(String[] args){
-        Database d = new Database();
-        d.getAppointmentId();
-    }
 
     /**
      * set the appointment's labtests

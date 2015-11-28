@@ -1,17 +1,11 @@
 package xml;
 
-import java.util.ArrayList;
-import components.data.Appointment;
-import components.data.Patient;
-import components.data.Phlebotomist;
-import components.data.PSC;
-import components.data.LabTest;
-import components.data.AppointmentLabTest;
-import components.data.Diagnosis;
-import java.util.List;
+import java.util.*;
+import components.data.*;
 
 /**
  * deals with generating the XML tags for the data input
+ * @author Julianna Gabler
  */
 public class XML{
     public XML(){}

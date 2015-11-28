@@ -4,9 +4,12 @@ import components.data.*;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
+import java.text.*;
 
+/**
+ * deals with the data validation for the appointment service
+ * @author Julianna Gabler
+ */
 public class DataValidation{
 /**********************************************************************************************************************/
 /******** ATTRIBUTES **************************************************************************************************/

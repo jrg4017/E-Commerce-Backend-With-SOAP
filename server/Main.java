@@ -7,6 +7,7 @@ import components.data.*;
 
 /**
  * created to keep the AppointmentService's code minimal
+ * @author Julianna Gabler
  */
 public class Main{
 /**********************************************************************************************************************/

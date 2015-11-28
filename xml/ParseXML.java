@@ -1,16 +1,3 @@
-//<?xml version="1.0" encoding="utf-8" standalone="no"?>
-//<appointment>
-//<date>2016-12-30
-//<time>10:05
-//<patientId>220</patientId>
-//<physicianId>20</physicianId>
-//<pscId>520</pscId>
-//<phlebotomistId>110</phlebotomistId>
-//<labTests>
-//<test id="86900" dxcode="292.9" />
-//<test id="86609" dxcode="307.3" />
-//</labTests>
-
 package xml;
 
 import java.util.*;
@@ -23,10 +10,18 @@ import org.w3c.dom.*;
 import org.w3c.dom.NodeList;
 import java.io.*;
 
+/**
+ * deals with parsing the xml string that's passed in and returns a HashMap
+ */
 public class ParseXML{
-    String xml = "";
-    Element element = null;
-    HashMap<String, String> apptInfo = new HashMap<String, String>();
+/**********************************************************************************************************************/
+/******** ATTRIBUTES **************************************************************************************************/
+    private String xml = "";
+    private Element element = null;
+    private HashMap<String, String> apptInfo = new HashMap<String, String>();
+    private HashMap<String, String> labTests = new HashMap<String, String>();
+/**********************************************************************************************************************/
+/********* CONSTRUCTOR ************************************************************************************************/
     /**
      * sets the xml string for parsing
      * @param xml
@@ -37,7 +32,12 @@ public class ParseXML{
          this.parseXmlString();
         }catch(Exception e){ e.printStackTrace();}
     }//end parse XML
-    
+/**********************************************************************************************************************/
+/********** ACCESSORS *************************************************************************************************/
+    public HashMap<String, String> getApptInfo(){ return this.apptInfo; }
+    public HashMap<String, String> getLabTests(){ return this.labTests; }
+/**********************************************************************************************************************/
+/********** METHODS ***************************************************************************************************/
     public static void main(String[] args){
       String x = "<?xml version='1.0' encoding='utf-8' standalone='no'?><appointment>";
       x += "<date>2016-12-30</date><time>10:05</time><patientId>220</patientId><physicianId>20</physicianId>";
@@ -45,6 +45,9 @@ public class ParseXML{
       x += "<test id='86900' dxcode='292.9' /><test id='86609' dxcode='307.3' /></labTests></appointment>";
       
       ParseXML px = new ParseXML(x);
+      HashMap<String, String> hm = px.getApptInfo();
+      System.out.println(hm.get("patientId"));
+      
     }
 
     /**
@@ -57,14 +60,8 @@ public class ParseXML{
     }//end addToHashMap
 
     /**
-     * returns the hashmap with all information
-     * @return this.apptInfo
-     */
-    public HashMap<String, String> getApptInfo(){ return this.apptInfo; }
-
-    /**
-     *
-     * @return
+     * gets the dom object for parsing
+     * @return Document
      * @throws Exception
      */
     private Document getDocumentObject() throws Exception{
@@ -97,24 +94,28 @@ public class ParseXML{
             this.addNodeItem("pscId", "PSC");
             this.addNodeItem("phlebotomistId", "Phlebotomist");
         }//end for loop
-         System.out.println("outside");
+
         addLabTest(doc);
 
-    }
+    }//end parsXmlString
 
     /**
      * gets the String value for each node and inserts it into the HashMap
      * @param tagName
      * @param key
      */
-    public void addNodeItem(String tagName, String key){
+    private void addNodeItem(String tagName, String key){
         NodeList nl = this.element.getElementsByTagName(tagName);
         Element line = (Element)nl.item(0);
         this.addToHashMap(key, this.elementToString(line));
     }//end addNodeItem
 
-    public void addLabTest(Document doc){
-    
+    /**
+     * adds all of the lab tests and plugs them into the arraylist
+     * @param doc
+     */
+    private void addLabTest(Document doc){
+/*************************************************************************************************************************/
     //TODO grab lab test item; test nodes have inner xml data, need to grab those too
         ArrayList<String> labTests = new ArrayList<String>();
         NodeList nl = doc.getElementsByTagName("labTests");
@@ -144,5 +145,4 @@ public class ParseXML{
         }
         return "";
     }//end elementToString
-
 }//end class

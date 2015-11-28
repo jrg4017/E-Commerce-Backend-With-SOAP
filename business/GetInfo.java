@@ -1,20 +1,11 @@
 package business;
 
-import components.data.IComponentsData;
-import components.data.LabTest;
-import components.data.PSC;
-import components.data.Patient;
-import components.data.Phlebotomist;
-import components.data.Physician;
-import components.data.Diagnosis;
-import components.data.LabTest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import components.data.*;
+import java.util.*;
 
 /**
  * gets the id from a name or gets the object from the id
+ * @author Julianna Gabler
  */
 public class GetInfo {
 /**********************************************************************************************************************/

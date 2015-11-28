@@ -3,6 +3,10 @@ package server;
 import javax.jws.*;
 import java.util.ArrayList;
 
+/**
+ * the web service class for the Appointment program
+ * @author Julianna Gabler
+ */
 @WebService(serviceName = "AppointmentService")
 public class AppointmentService{
     Main m = new Main();
@@ -46,4 +50,4 @@ public class AppointmentService{
     public String addAppointment(String xmlStyle){
         return this.m.addAppointment(xmlStyle);
     }//end addAppointment
-}
+}//end AppointmentService
