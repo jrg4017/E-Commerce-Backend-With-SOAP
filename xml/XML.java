@@ -38,7 +38,7 @@ public class XML{
      */
    public String appointmentXML(){
       //if the appointment object is empty or null, return the error xml string
-      if(this.appt == "" || this.appt == null){ return error(); }
+      //if(this.appt == "" || this.appt == null){ return error(); }
       //else contunie with this
       String xml = this.getAppointmentInfo() + this.getPatientInfo();
       xml += this.getPhlebInfo() + this.getPscInfo() + this.getLabTests();

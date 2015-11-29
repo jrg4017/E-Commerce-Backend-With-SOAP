@@ -19,7 +19,7 @@ public class ParseXML{
     private String xml = "";
     private Element element = null;
     private HashMap<String, String> apptInfo = new HashMap<String, String>();
-    private HashMap<String, String> labTests = new HashMap<String, String>();
+    private ArrayList<String> labTests = new ArrayList<String>();
 /**********************************************************************************************************************/
 /********* CONSTRUCTOR ************************************************************************************************/
     /**
@@ -35,7 +35,7 @@ public class ParseXML{
 /**********************************************************************************************************************/
 /********** ACCESSORS *************************************************************************************************/
     public HashMap<String, String> getApptInfo(){ return this.apptInfo; }
-    public HashMap<String, String> getLabTests(){ return this.labTests; }
+    public ArrayList<String> getLabTests(){ return this.labTests; }
 /**********************************************************************************************************************/
 /********** METHODS ***************************************************************************************************/
     public static void main(String[] args){
@@ -45,19 +45,27 @@ public class ParseXML{
       x += "<test id='86900' dxcode='292.9' /><test id='86609' dxcode='307.3' /></labTests></appointment>";
       
       ParseXML px = new ParseXML(x);
-      HashMap<String, String> hm = px.getApptInfo();
-      System.out.println(hm.get("patientId"));
+      ArrayList<String> al = px.getLabTests();
+      for(int i = 0; i < al.size(); i++){
+          System.out.println(al.get(i));
+      }
       
     }
 
     /**
-     * add key, value to the apptInfo HashMAp
+     * add key, value to the apptInfo HashMap
      * @param key
      * @param value
      */
     private void addToHashMap(String key, String value){
         this.apptInfo.put(key, value);
     }//end addToHashMap
+    /**
+     * add key, value to the labTest HashMap
+     * @param key
+     * @param value
+     */
+    private void addToLabTest(String value){ this.labTests.add(value); }
 
     /**
      * gets the dom object for parsing
@@ -93,10 +101,8 @@ public class ParseXML{
             this.addNodeItem("physicianId", "Physician");
             this.addNodeItem("pscId", "PSC");
             this.addNodeItem("phlebotomistId", "Phlebotomist");
+            addLabTest(doc);
         }//end for loop
-
-        addLabTest(doc);
-
     }//end parsXmlString
 
     /**
@@ -115,19 +121,13 @@ public class ParseXML{
      * @param doc
      */
     private void addLabTest(Document doc){
-/*************************************************************************************************************************/
-    //TODO grab lab test item; test nodes have inner xml data, need to grab those too
-        ArrayList<String> labTests = new ArrayList<String>();
-        NodeList nl = doc.getElementsByTagName("labTests");
-        Element e = (Element)nl.item(0);
-        for(int i = 0; i < nl.getLength(); i++){
-            NodeList nl2 = e.getElementsByTagName("test");
-            Element line = (Element)nl2.item(0);
-            labTests.add(this.elementToString(line));
-            line = (Element)nl2.item(1);
-            labTests.add(this.elementToString(line));
-            
-            System.out.println( this.elementToString(line));
+        Element e = (Element)doc.getElementsByTagName("labTests").item(0); //grab new element
+        NodeList nl = e.getElementsByTagName("test"); //get the nodelist
+        for(int i = 0; i < nl.getLength(); i++){ //grab each id and dxcode
+            String line = nl.item(i).getAttributes().getNamedItem("id").getNodeValue();
+            this.addToLabTest(line);
+            line = nl.item(i).getAttributes().getNamedItem("dxcode").getNodeValue();
+            this.addToLabTest(line);
         }
     }//end addLabTest
 
