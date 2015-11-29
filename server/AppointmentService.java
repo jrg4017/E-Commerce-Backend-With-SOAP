@@ -27,7 +27,7 @@ public class AppointmentService{
      */
     @WebMethod(operationName = "GetAllAppoinments")
     public String getAllAppointments(){
-      return this.m.getAllAppointments();
+        return this.m.getAllAppointments();
     }//end getAllAppointments
 
     /**

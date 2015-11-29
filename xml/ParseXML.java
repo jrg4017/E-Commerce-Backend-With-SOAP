@@ -30,7 +30,10 @@ public class ParseXML{
         this.xml = xml;
         try{
          this.parseXmlString();
-        }catch(Exception e){ e.printStackTrace();}
+        }catch(Exception e){
+            XML x = new XML();
+            System.out.println("<AppointmentList>" + x.error() + "</AppointmentList>");
+        }
     }//end parse XML
 /**********************************************************************************************************************/
 /********** ACCESSORS *************************************************************************************************/
@@ -38,20 +41,6 @@ public class ParseXML{
     public ArrayList<String> getLabTests(){ return this.labTests; }
 /**********************************************************************************************************************/
 /********** METHODS ***************************************************************************************************/
-    public static void main(String[] args){
-      String x = "<?xml version='1.0' encoding='utf-8' standalone='no'?><appointment>";
-      x += "<date>2016-12-30</date><time>10:05</time><patientId>220</patientId><physicianId>20</physicianId>";
-      x += "<pscId>520</pscId><phlebotomistId>110</phlebotomistId><labTests>";
-      x += "<test id='86900' dxcode='292.9' /><test id='86609' dxcode='307.3' /></labTests></appointment>";
-      
-      ParseXML px = new ParseXML(x);
-      ArrayList<String> al = px.getLabTests();
-      for(int i = 0; i < al.size(); i++){
-          System.out.println(al.get(i));
-      }
-      
-    }
-
     /**
      * add key, value to the apptInfo HashMap
      * @param key

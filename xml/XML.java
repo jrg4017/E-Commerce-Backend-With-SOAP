@@ -21,6 +21,11 @@ public class XML{
     public XML(Appointment appt){
         this.appt = appt;
     }
+
+   /**
+    * used printing out the error only
+    */
+    public XML(){}
 /**********************************************************************************************************************/
 /************ MUTATORS ************************************************************************************************/
    public void setAppointment(Appointment appt){ this.appt = appt; }//end setAppointmnet

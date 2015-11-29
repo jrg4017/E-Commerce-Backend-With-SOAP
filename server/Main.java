@@ -70,18 +70,18 @@ public class Main{
     }//end getAppointment
 
     /**
-     *
+     * adds the appointment to the database or gets the next available appointment
+     * from the database
      * @param xmlStyle
-     * @return
+     * @return apptXML
      */
     public String addAppointment(String xmlStyle){
-
-        return "";
+        //parse the XML document and grab necessary information
+        ParseXML parseXML = new ParseXML(xmlStyle);
+        //validate data
+        DataValidation dv = new DataValidation(parseXML.getApptInfo(), parseXML.getLabTests());
+        //add the appointment or get the next appointment
+        String apptXML = dv.apptRequirements();
+        return apptXML;
     }//end addAppointment
-
-    public static void main(String[] args){
-        Main m = new Main();
-        m.initialize();
-        System.out.println(m.getAppointment("810"));
-    }
 }//end Main class
