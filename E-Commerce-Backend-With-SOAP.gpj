@@ -11,7 +11,7 @@ s#i0
 s#k0C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\725DataComp.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\antlr-2.7.6.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\asm.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\asm-attrs.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\cglib-2.1.3.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\commons-collections-2.1.1.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\commons-logging.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\derby.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\dom4j-1.6.1.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\ehcache-1.2.3.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\ejb3-persistence.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\hibernate3.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\hibernate-annotations.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\hibernate-commons-annotations.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\hibernate-entitymanager.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\hibernate-commons-annotations.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\hibernate-entitymanager.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\hibernate-tools.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\javassist.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\jdbc2_0-stdext.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\jta.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\jtidy-r8-20060801.jar\000\012C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\log4j-1.2.17.jar\000
 s#j0C:\\Users\\Julianna Rose\\Desktop\\E-Commerce-Backend-With-SOAP\\lib\\725DataComp.jar
 s#l0
-!255;g
+!233;g
 %\011business%sDatabase.java
 %\011server%sMain.java
 %\011xml%sParseXML.java
@@ -19,9 +19,8 @@ s#l0
 %\011E-Commerce-Backend-With-SOAP.gpj
 %\011business%sDataValidation.java
 %\011business%sGetInfo.java
-%\011lib%sTestDB.java
 %\011xml%sXML.java
-!255;f
+!233;f
 %\011business%sDatabase.java
 %\011server%sMain.java
 %\011xml%sParseXML.java
@@ -29,5 +28,6 @@ s#l0
 %\011E-Commerce-Backend-With-SOAP.gpj
 %\011business%sDataValidation.java
 %\011business%sGetInfo.java
-%\011lib%sTestDB.java
 %\011xml%sXML.java
+!34;m
+RunSelect	APPLICATION:server.Main

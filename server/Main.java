@@ -48,7 +48,7 @@ public class Main{
     /**
      * gets the appointment in xml string format
      * @param appointNumber the number of the appt
-     * @return xmlStr String
+     * @return String
      */
     public String getAppointment(String appointNumber){
         List<Object> obj = this.database.getAppointment(appointNumber);
@@ -63,10 +63,8 @@ public class Main{
         }
         Appointment appt = (Appointment)rtn;
         XML xml = new XML(appt);
-        String xmlStr = xml.getStartTag() + xml.getTagNameStart() + xml.appointmentXML();
-        xmlStr += xml.getTagNameEnd();
         //return it in full
-        return xmlStr;
+        return xml.getFullXml();
     }//end getAppointment
 
     /**
@@ -82,24 +80,19 @@ public class Main{
             //validate data
             DataValidation dv = new DataValidation(parseXML.getApptInfo(), parseXML.getLabTests());
             //add the appointment or get the next appointment
-            String apptXML = dv.apptRequirements();
-            return apptXML;
+            boolean added = dv.apptRequirements();
 
-        }catch(NullPointerException npe){
-            npe.printStackTrace();
-        }
-        
-        return "";
+            XML xml = new XML();
+
+            if(added) {
+                xml.setAppointment(dv.getNewAppt()); //set the appointment value
+                return xml.getFullXml();
+            }
+            return xml.error();
+
+        }catch(NullPointerException npe){}
+        catch(Exception e){}
+        XML x = new XML(); //print out error if caught at this stage
+        return x.error();
     }//end addAppointment
-
-    public static void main(String[] args){
-        String xml = "<?xml version='1.0' encoding='utf-8' standalone='no'?>";
-        xml += "<appointment><date>2016-11-30</date><time>10:05</time><patientId>230";
-        xml += "</patientId><physicianId>20</physicianId><pscId>520</pscId><phlebotomistId>";
-        xml += "110</phlebotomistId><labTests><test id='86900' dxcode='292.9' /><test id='86609'";
-        xml += " dxcode='307.3' /></labTests></appointment>";
-
-        Main m = new Main();
-        m.addAppointment(xml);
-    }
 }//end Main class

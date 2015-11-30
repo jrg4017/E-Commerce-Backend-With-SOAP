@@ -58,29 +58,26 @@ public class DataValidation{
     /**
      * looks at the appointment requirements to see if requested appt is open
      * and if the appointment is scheduled far enough away from the next appointment
-     * @return String - error or empty(good)
+     * @return boolean - true = good; false= did not add
      */
-    public String apptRequirements(){
+    public boolean apptRequirements(){
         //validate everyone
-        if(!this.validatePeople()) return "ERROR: not valid people";
+        if(!this.validatePeople()) return false;
 
         boolean apptTime = this.db.isValidApptDateTime(this.apptIds);  //looks to see if appointment is open
         boolean conflict;                               //to see if appointment request is far enough away
 
         //if not valid, grabs next appointment time else look to see if there's a conflict
-        if(!apptTime) return this.nextAvailableAppt();
+        if(!apptTime) return false;
         else conflict = this.isScheduleConflict();
-
-        if(conflict){ return this.nextAvailableAppt(); }//if conflict, return the nextAvailable appointment
+        //if conflict, return the nextAvailable appointment
+        if(conflict){ return false; }
 
         //if no conflict (false) set the appointment
         this.newAppt = this.db.setAppointment(this.apptIds, this.tests);
 
-       // boolean added = this.db.addApptToDB(this.newAppt);
-
-        //if(!added) return this.nextAvailableAppt();
-        System.out.println(this.validateAppointment());
-        return "" + this.validateAppointment();
+        this.db.addApptToDB(this.newAppt); //add to the database
+        return this.validateAppointment(); //validate -> true means added
     }//end apptRequirements
 
     /**
@@ -90,11 +87,6 @@ public class DataValidation{
     public boolean validateAppointment(){
         return this.db.isValidObject("Appointment", this.newAppt.getId());
     }//end validateAppointment
-
-    private String nextAvailableAppt(){
-        System.out.println("next avail");
-        return "next avail";
-    }
 
     /**
      * checks to see if there is a schedule conflict
@@ -130,17 +122,17 @@ public class DataValidation{
     private boolean calculateTime(Appointment a){
         long diffRequired = 30;
         //if they do match make sure the minute difference is 15 instead
-        if(a.getPhlebid().toString().equals(this.apptIds.get("Phlebotomist"))) diffRequired = 15;
-
+        Phlebotomist p = a.getPhlebid(); //get the object
+        if(p.getId().equals(this.apptIds.get("Phlebotomist"))) diffRequired = 15;
+        //save as time for the difference
         java.sql.Time phlebTime = a.getAppttime();
         java.sql.Time apptTime = db.getTime(this.apptIds.get("Time"));
 
         //get the difference
         long diff = phlebTime.getTime() - apptTime.getTime();
         long diffMinutes = diff / (60*1000) % 60;
-        System.out.println(diffRequired + "::" + diffMinutes);
         //doesn't matter if -15 or +15 (must be atleast 15 minutes between appt
-        if(diffMinutes >= Math.abs(diffRequired))  return true;
+        if(Math.abs(diffMinutes) >= diffRequired) return true;
         return false;
     }//end caluclate
 
@@ -155,7 +147,6 @@ public class DataValidation{
             !this.db.isValidObject("Phlebotomist", this.apptIds.get("Phlebotomist") ) ||
             !this.db.isValidObject("Physician", this.apptIds.get("Physician") ) ||
             !this.db.isValidObject("PSC", this.apptIds.get("PSC") ) ){
-            System.out.println("false");    
                 return false;
         }
         return true;

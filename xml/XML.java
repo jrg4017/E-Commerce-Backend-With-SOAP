@@ -42,9 +42,6 @@ public class XML{
      * @return xml String
      */
    public String appointmentXML(){
-      //if the appointment object is empty or null, return the error xml string
-      //if(this.appt == "" || this.appt == null){ return error(); }
-      //else contunie with this
       String xml = this.getAppointmentInfo() + this.getPatientInfo();
       xml += this.getPhlebInfo() + this.getPscInfo() + this.getLabTests();
       xml += "</appointment>";
@@ -113,10 +110,21 @@ public class XML{
    }//end getLabTests
 
    /**
+    * gets the full xml string
+    * @param xml
+    * @return
+     */
+   public String getFullXml(){
+      String xmlStr = this.getStartTag() + this.getTagNameStart() + this.appointmentXML();
+      xmlStr += this.getTagNameEnd();
+      return xmlStr;
+   }//end getFullXml
+
+   /**
     * returns the error string
     * @return String
     */
    public String error(){
-      return START_TAG + "<error>ERROR: Appointment is not available</error>";
+      return START_TAG + this.getTagNameStart() + "<error>ERROR: Appointment is not available</error>" + this.getTagNameEnd();
    }//end error
 }//end XML class
