@@ -45,6 +45,7 @@ public class Database{
      */
     public java.sql.Time getTime(String time){
         try{
+            time = time + ":00"; //add to end of the time
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             long ms = sdf.parse(time).getTime();
             java.sql.Time t = new Time(ms);
@@ -138,6 +139,21 @@ public class Database{
         highestId += 10;
         return String.valueOf(highestId);
     }//end getLastAppointmentId
+
+    /**
+     * gets the desired object from db
+     * @param object String
+     * @param id String
+     * @return Object
+     */
+    public Object getObject(String object, String id){
+        String param = "id='" + id + "'";
+        List<Object> objs = this.icdDB.getData(object, param);
+        for(Object obj : objs){
+            return obj;
+        }
+        return null;
+    }//end getObject
 
     /**
      * set the appointment's labtests

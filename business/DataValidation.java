@@ -16,7 +16,7 @@ public class DataValidation{
     private HashMap<String, String> apptIds = new HashMap<String, String>();
     private ArrayList<String> tests = new ArrayList<String>();
     Appointment newAppt = null;
-    Database db = null;
+    Database db = new Database();
 /**********************************************************************************************************************/
 /******************* CONSTRUCTOR **************************************************************************************/
     /**
@@ -65,11 +65,11 @@ public class DataValidation{
         if(!this.validatePeople()) return "ERROR: not valid people";
 
         boolean apptTime = this.db.isValidApptDateTime(this.apptIds);  //looks to see if appointment is open
-        //boolean conflict;                               //to see if appointment request is far enough away
+        boolean conflict;                               //to see if appointment request is far enough away
 
         //if not valid, grabs next appointment time else look to see if there's a conflict
         if(!apptTime) return this.nextAvailableAppt();
-       // else conflict = this.isScheduleConflict();
+        else conflict = this.isScheduleConflict();
 
         // if(conflict){ return this.nextAvailableAppt(); }//if conflict, return the nextAvailable appointment
 
@@ -91,31 +91,49 @@ public class DataValidation{
         return "next avail";
     }
 
+    /**
+     * checks to see if there is a schedule conflict
+     * @return boolean
+     */
     private boolean isScheduleConflict(){
+       boolean temp = true;
         //get phlebotomist and psc objects to check conflicts
-        // Phlebotomist p = this.newAppt.getPhlebid();
-//         PSC psc = this.newAppt.getPscid();
+         Phlebotomist apptPhleb = (Phlebotomist) this.db.getObject("Phlebotomist", this.apptIds.get("Phlebotomist"));
+         PSC apptPscId = (PSC) this.db.getObject("PSC", this.apptIds.get("PSC"));
 // 
-//         List<Appointment> pl = p.getAppointmentCollection();
-//         for(Appointment appt : ){
-//             if(appt.getDate() == java.sql.Date.valueOf(this.apptIds.get("Date"))){
-//                 this.compareDateTime(appt);
-//                 //TODO compare time
-//             }
-//         }
+        List<Appointment> phlebAppts = apptPhleb.getAppointmentCollection();
+        for(Appointment a: phlebAppts){
+            //if the date is the same, calculate time difference
+            if(a.getApptdate() == this.db.getDate(this.apptIds.get("Date"))) {
+                temp = this.calculateTime(a);
+            }
+            //if a false is ever returned, means that there is a conflict
+            if(temp == false) return true; //true means IS CONFLICT
+        }
+      return false; //means NO CONLICT 
+    }//end isScheduleConflict
 
-      return false;
-    }
+    /**
+     * calculates to make sure at least 15 / 30 minutes apart from the next appointment
+     * @param a - the appointment being looked at
+     * @return boolean
+     */
+    private boolean calculateTime(Appointment a){
+        long diffRequired = 15;
+        //if they don't match make sure the minute difference is 30 instead
+        if(a.getPhlebid().toString() != this.apptIds.get("Phlebotomist")) diffRequired = 30;
 
-    private boolean compareDateTime(Appointment pa){
-//         Time ptime = new Time(pa.getTime());
-//         Time newtime = new Time(this.apptIds.get("Time"));
-// 
-//         long c = ptime.getTime() - newtime.getTime();
-//         Time diff = new Time(c);
+        java.sql.Time phlebTime = a.getAppttime();
+        java.sql.Time apptTime = db.getTime(this.apptIds.get("Time"));
 
-      return false;
-    }
+        //get the difference
+        long diff = phlebTime.getTime() - apptTime.getTime();
+        long diffMinutes = diff / (60*1000) % 60;
+        System.out.println(diffRequired + "::" + diffMinutes);
+        //doesn't matter if -15 or +15 (must be atleast 15 minutes between appt
+        if(diffMinutes >= Math.abs(diffRequired))  return true;
+        return false;
+    }//end caluclate
 
     /**
      * makses sure that the Patient, Phlebotomist, Physician and PSC are valid people
@@ -124,10 +142,11 @@ public class DataValidation{
      */
     private boolean validatePeople(){
         //validate everything and if not valid, return the message
-        if( !this.db.isValidObject("Patient", this.apptIds.get("Patient") ) ||
+         if( !this.db.isValidObject("Patient", this.apptIds.get("Patient") ) ||
             !this.db.isValidObject("Phlebotomist", this.apptIds.get("Phlebotomist") ) ||
             !this.db.isValidObject("Physician", this.apptIds.get("Physician") ) ||
             !this.db.isValidObject("PSC", this.apptIds.get("PSC") ) ){
+            System.out.println("false");    
                 return false;
         }
         return true;

@@ -32,6 +32,7 @@ public class ParseXML{
          this.parseXmlString();
         }catch(Exception e){
             XML x = new XML();
+            e.printStackTrace();
             System.out.println("<AppointmentList>" + x.error() + "</AppointmentList>");
         }
     }//end parse XML
