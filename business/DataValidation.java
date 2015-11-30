@@ -71,12 +71,16 @@ public class DataValidation{
         if(!apptTime) return this.nextAvailableAppt();
         else conflict = this.isScheduleConflict();
 
-        // if(conflict){ return this.nextAvailableAppt(); }//if conflict, return the nextAvailable appointment
+        if(conflict){ return this.nextAvailableAppt(); }//if conflict, return the nextAvailable appointment
 
         //if no conflict (false) set the appointment
-        
-        // /this.setAppointment();
-        return "appt";
+        this.newAppt = this.db.setAppointment(this.apptIds, this.tests);
+
+       // boolean added = this.db.addApptToDB(this.newAppt);
+
+        //if(!added) return this.nextAvailableAppt();
+        System.out.println(this.validateAppointment());
+        return "" + this.validateAppointment();
     }//end apptRequirements
 
     /**
@@ -84,10 +88,11 @@ public class DataValidation{
      * @return
      */
     public boolean validateAppointment(){
-        return this.db.isValidObject("Appointment", newAppt.getId());
+        return this.db.isValidObject("Appointment", this.newAppt.getId());
     }//end validateAppointment
 
     private String nextAvailableAppt(){
+        System.out.println("next avail");
         return "next avail";
     }
 
@@ -98,13 +103,17 @@ public class DataValidation{
     private boolean isScheduleConflict(){
        boolean temp = true;
         //get phlebotomist and psc objects to check conflicts
-         Phlebotomist apptPhleb = (Phlebotomist) this.db.getObject("Phlebotomist", this.apptIds.get("Phlebotomist"));
-         PSC apptPscId = (PSC) this.db.getObject("PSC", this.apptIds.get("PSC"));
-// 
+        GetInfo gi = this.db.getGi();
+        Phlebotomist apptPhleb = gi.getPhlebotomist(this.apptIds.get("Phlebotomist"));
+        PSC apptPscId = gi.getPSC(this.apptIds.get("PSC"));
+
         List<Appointment> phlebAppts = apptPhleb.getAppointmentCollection();
         for(Appointment a: phlebAppts){
             //if the date is the same, calculate time difference
-            if(a.getApptdate() == this.db.getDate(this.apptIds.get("Date"))) {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String date = df.format(a.getApptdate());
+
+            if( date.equals(this.apptIds.get("Date"))) {
                 temp = this.calculateTime(a);
             }
             //if a false is ever returned, means that there is a conflict
@@ -119,9 +128,9 @@ public class DataValidation{
      * @return boolean
      */
     private boolean calculateTime(Appointment a){
-        long diffRequired = 15;
-        //if they don't match make sure the minute difference is 30 instead
-        if(a.getPhlebid().toString() != this.apptIds.get("Phlebotomist")) diffRequired = 30;
+        long diffRequired = 30;
+        //if they do match make sure the minute difference is 15 instead
+        if(a.getPhlebid().toString().equals(this.apptIds.get("Phlebotomist"))) diffRequired = 15;
 
         java.sql.Time phlebTime = a.getAppttime();
         java.sql.Time apptTime = db.getTime(this.apptIds.get("Time"));

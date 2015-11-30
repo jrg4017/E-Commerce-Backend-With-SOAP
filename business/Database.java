@@ -63,6 +63,11 @@ public class Database{
         List<Object> obj = this.icdDB.getData("Appointment", id);
         return obj;
     }//end getAppointment
+
+    /**
+     * @return gi
+     */
+    public GetInfo getGi(){ return this.gi; }
 /**********************************************************************************************************************/
 /************* METHOD *************************************************************************************************/
     /**
@@ -141,21 +146,6 @@ public class Database{
     }//end getLastAppointmentId
 
     /**
-     * gets the desired object from db
-     * @param object String
-     * @param id String
-     * @return Object
-     */
-    public Object getObject(String object, String id){
-        String param = "id='" + id + "'";
-        List<Object> objs = this.icdDB.getData(object, param);
-        for(Object obj : objs){
-            return obj;
-        }
-        return null;
-    }//end getObject
-
-    /**
      * set the appointment's labtests
      * @param tests
      * @param newAppt
@@ -188,7 +178,6 @@ public class Database{
 
         //create a new appointment object
         Appointment newAppt = new Appointment(this.getAppointmentId(),d, t);
-
         //set the patient attribute
         Patient p = this.gi.getPatient(apptIds.get("Patient"));
         newAppt.setPatientid(p);

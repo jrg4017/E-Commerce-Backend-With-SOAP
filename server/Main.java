@@ -94,7 +94,7 @@ public class Main{
 
     public static void main(String[] args){
         String xml = "<?xml version='1.0' encoding='utf-8' standalone='no'?>";
-        xml += "<appointment><date>2016-12-30</date><time>10:00</time><patientId>230";
+        xml += "<appointment><date>2016-11-30</date><time>10:05</time><patientId>230";
         xml += "</patientId><physicianId>20</physicianId><pscId>520</pscId><phlebotomistId>";
         xml += "110</phlebotomistId><labTests><test id='86900' dxcode='292.9' /><test id='86609'";
         xml += " dxcode='307.3' /></labTests></appointment>";
